@@ -5,7 +5,7 @@ namespace UnityEasing  {
 	/// </summary>
 	public class FloatEasing : Easing<float>
 	{
-		public FloatEasing(float from, float to, float duration, EasingType easingType) : base(from, to, duration, easingType) { }
+		public FloatEasing(float from, float to, float duration = 1.0f, EasingType easingType = EasingType.Linear, float delay = 0.0f) : base(from, to, duration, easingType, delay) { }
 
 		protected override float ComputeChange(float from, float to)
 		{

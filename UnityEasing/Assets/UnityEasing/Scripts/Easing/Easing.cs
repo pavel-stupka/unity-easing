@@ -37,12 +37,17 @@ namespace UnityEasing  {
         /// Current easing time.
         /// </summary>
         public float Time { get; private set; }
+        
+        /// <summary>
+        /// Seconds remaining before easing starts (countdown).
+        /// </summary>
+        public float Delay { get; private set; }
 
         /// <summary>
         /// Easing function being used.
         /// </summary>
         public EasingFunction EasingFunction { get; private set; }
-        
+
         /// <summary>
         /// Initializes the values. Must be called from inherited class constructor.
         /// </summary>
@@ -50,7 +55,8 @@ namespace UnityEasing  {
         /// <param name="to"></param>
         /// <param name="duration"></param>
         /// <param name="easingType"></param>
-        protected Easing(T from, T to, float duration, EasingType easingType)
+        /// <param name="delay"></param>
+        protected Easing(T from, T to, float duration = 1.0f, EasingType easingType = EasingType.Linear, float delay = 0.0f)
         {
             Finished = false;
             Begin = from;
@@ -59,6 +65,7 @@ namespace UnityEasing  {
             Value = from;
             Time = 0f;
             EasingFunction = EasingFunctions.Get(easingType);
+            Delay = delay;
         }
         
         /// <summary>
@@ -72,15 +79,34 @@ namespace UnityEasing  {
         }
         
         /// <summary>
-        /// Updates easing values. Returns true if the value was updated, false otherwise.
+        /// Updates easing values.
         /// </summary>
         /// <param name="deltaTime"></param>
-        /// <returns>Returns true if the value was updated, false otherwise.</returns>
+        /// <returns>Returns true if the easing is valid, ie. the value was updated or waiting because of delay.
+        /// Returns false if the easing is finished.</returns>
         public bool Update(float deltaTime) 
         {
             if (Finished) return false;
 
-            Time += deltaTime;
+            var updateTimeByDelta = true;
+            
+            if (Delay > 0.0f)
+            {
+                Delay -= deltaTime;
+                if (Delay >= 0.0f)
+                {
+                    return true;
+                }
+                updateTimeByDelta = false;
+                Time = -Delay;
+                Delay = 0.0f;
+            }
+
+            if (updateTimeByDelta)
+            {
+                Time += deltaTime;                
+            }
+
             if (Time >= Duration)
             {
                 Time = Duration;

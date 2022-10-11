@@ -7,7 +7,7 @@ namespace UnityEasing  {
 	/// </summary>
 	public class ColorEasing : Easing<Color>
 	{
-		public ColorEasing(Color from, Color to, float duration, EasingType easingType) : base(from, to, duration, easingType) { }
+		public ColorEasing(Color from, Color to, float duration = 1.0f, EasingType easingType = EasingType.Linear, float delay = 0.0f) : base(from, to, duration, easingType, delay) { }
 
 		protected override Color ComputeChange(Color from, Color to)
 		{

@@ -8,12 +8,7 @@ namespace UnityEasing
         
         private void Start()
         {
-            Invoke(nameof(StartEasing), 1);
-        }
-
-        private void StartEasing()
-        {
-            easing = new Vector3Easing(transform.position, transform.position + new Vector3(8, 0, 0), 2, EasingType.OutCubic);
+            easing = new Vector3Easing(transform.position, transform.position + new Vector3(8, 0, 0), 2, EasingType.OutCubic, 2.0f);
         }
 
         private void Update()
