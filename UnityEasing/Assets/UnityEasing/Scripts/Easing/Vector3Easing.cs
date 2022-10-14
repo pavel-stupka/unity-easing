@@ -7,6 +7,8 @@ namespace UnityEasing {
 	/// </summary>
 	public class Vector3Easing : Easing<Vector3>
 	{
+		public Vector3Easing() { }
+		
 		public Vector3Easing(Vector3 from, Vector3 to, float duration = 1.0f, EasingType easingType = EasingType.Linear, float delay = 0.0f) : base(from, to, duration, easingType, delay) { }
 
 		protected override Vector3 ComputeChange(Vector3 from, Vector3 to)

@@ -4,26 +4,19 @@ namespace UnityEasing
 {
     public class CubeExample : MonoBehaviour
     {
-        private Vector3Easing easing;
+        [SerializeField] private Transform targetTranform;
+        [SerializeField] private Vector3 targetPosition;
         
         private void Start()
         {
-            easing = new Vector3Easing(transform.position, transform.position + new Vector3(8, 0, 0), 2, EasingType.OutCubic, 2.0f);
-        }
-
-        private void Update()
-        {
-            if (easing != null)
+            if (targetTranform != null)
             {
-                if (easing.Update())
-                {
-                    transform.position = easing.Value;
-                }
-                else
-                {
-                    easing = null;
-                }
+                transform.MoveTo(targetTranform, 2.0f, EasingType.OutCubic, 1.0f, Space.World);
             }
-        } 
+            else
+            {
+                transform.MoveTo(targetPosition, 2.0f, EasingType.OutCubic, 1.0f, Space.World);
+            }
+        }
     }
 }

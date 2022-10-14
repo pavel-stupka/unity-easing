@@ -9,9 +9,9 @@ namespace UnityEasing  {
     public abstract class Easing<T>
     {
         /// <summary>
-        /// True if the easing is already completed.
+        /// Whether the easing is running.
         /// </summary>
-        public bool Finished { get; private set; }
+        public bool Running { get; private set; }
         
         /// <summary>
         /// Initial value.
@@ -49,6 +49,15 @@ namespace UnityEasing  {
         public EasingFunction EasingFunction { get; private set; }
 
         /// <summary>
+        /// Create a new instance but does not start easing.
+        /// </summary>
+        protected Easing()
+        {
+            Running = false;
+            Value = default;
+        }
+
+        /// <summary>
         /// Initializes the values. Must be called from inherited class constructor.
         /// </summary>
         /// <param name="from"></param>
@@ -58,7 +67,20 @@ namespace UnityEasing  {
         /// <param name="delay"></param>
         protected Easing(T from, T to, float duration = 1.0f, EasingType easingType = EasingType.Linear, float delay = 0.0f)
         {
-            Finished = false;
+            Start(from, to, duration, easingType, delay);
+        }
+        
+        /// <summary>
+        /// Starts new easing.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="duration"></param>
+        /// <param name="easingType"></param>
+        /// <param name="delay"></param>
+        public void Start(T from, T to, float duration = 1.0f, EasingType easingType = EasingType.Linear, float delay = 0.0f)
+        {
+            Running = true;
             Begin = from;
             Change = ComputeChange(from, to);
             Duration = duration;
@@ -82,11 +104,11 @@ namespace UnityEasing  {
         /// Updates easing values.
         /// </summary>
         /// <param name="deltaTime"></param>
-        /// <returns>Returns true if the easing is valid, ie. the value was updated or waiting because of delay.
-        /// Returns false if the easing is finished.</returns>
+        /// <returns>Returns true if the easing is running/valid, ie. the value was updated or waiting because
+        /// a of delay. Returns false if the easing is finished.</returns>
         public bool Update(float deltaTime) 
         {
-            if (Finished) return false;
+            if (!Running) return false;
 
             var updateTimeByDelta = true;
             
@@ -110,7 +132,7 @@ namespace UnityEasing  {
             if (Time >= Duration)
             {
                 Time = Duration;
-                Finished = true;
+                Running = false;
             }
 
             Value = ComputeValue(Value, Time, Begin, Change, Duration, EasingFunction);
