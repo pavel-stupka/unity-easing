@@ -1,6 +1,22 @@
 ﻿// ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable VirtualMemberCallInConstructor
 namespace UnityEasing  {
+
+    /// <summary>
+    /// Easing value changed event delegate.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public delegate void ValueChangedDelegate<in T>(T value);
+
+    /// <summary>
+    /// Easing started event delegate.
+    /// </summary>
+    public delegate void EasingStartedDelegate();
+
+    /// <summary>
+    /// Easing finished event delegate.
+    /// </summary>
+    public delegate void EasingFinishedDelegate();
     
     /// <summary>
     /// General easing implementation.
@@ -49,6 +65,21 @@ namespace UnityEasing  {
         public EasingFunction EasingFunction { get; private set; }
 
         /// <summary>
+        /// Event that is invoked on value change.
+        /// </summary>
+        public event ValueChangedDelegate<T> ValueChanged;
+        
+        /// <summary>
+        /// Event that is invoked on easing start.
+        /// </summary>
+        public event EasingStartedDelegate EasingStarted;
+        
+        /// <summary>
+        /// Event that is invoked once easing finishes.
+        /// </summary>
+        public event EasingFinishedDelegate EasingFinished;
+
+        /// <summary>
         /// Create a new instance but does not start easing.
         /// </summary>
         protected Easing()
@@ -88,6 +119,9 @@ namespace UnityEasing  {
             Time = 0f;
             EasingFunction = EasingFunctions.Get(easingType);
             Delay = delay;
+            
+            OnEasingStarted();
+            OnValueChanged(Value);
         }
         
         /// <summary>
@@ -95,7 +129,7 @@ namespace UnityEasing  {
         /// Returns true if the value was updated, false otherwise. 
         /// </summary>
         /// <returns>Returns true if the value was updated, false otherwise.</returns>
-        public bool Update() 
+        public T Update() 
         {
             return Update(UnityEngine.Time.deltaTime);
         }
@@ -106,9 +140,9 @@ namespace UnityEasing  {
         /// <param name="deltaTime"></param>
         /// <returns>Returns true if the easing is running/valid, ie. the value was updated or waiting because
         /// a of delay. Returns false if the easing is finished.</returns>
-        public bool Update(float deltaTime) 
+        public T Update(float deltaTime) 
         {
-            if (!Running) return false;
+            if (!Running) return Value;
 
             var updateTimeByDelta = true;
             
@@ -117,7 +151,7 @@ namespace UnityEasing  {
                 Delay -= deltaTime;
                 if (Delay >= 0.0f)
                 {
-                    return true;
+                    return Value;
                 }
                 updateTimeByDelta = false;
                 Time = -Delay;
@@ -136,8 +170,14 @@ namespace UnityEasing  {
             }
 
             Value = ComputeValue(Value, Time, Begin, Change, Duration, EasingFunction);
+            OnValueChanged(Value);
 
-            return true;
+            if (!Running)
+            {
+                OnEasingFinished();
+            }
+
+            return Value;
         }
 
         /// <summary>
@@ -159,5 +199,30 @@ namespace UnityEasing  {
         /// <param name="easingFunction"></param>
         /// <returns></returns>
         protected abstract T ComputeValue(T value, float time, T begin, T change, float duration, EasingFunction easingFunction);
+
+        /// <summary>
+        /// Event invokator.
+        /// </summary>
+        /// <param name="value"></param>
+        protected virtual void OnValueChanged(T value)
+        {
+            ValueChanged?.Invoke(value);
+        }
+
+        /// <summary>
+        /// Event invokator.
+        /// </summary>
+        protected virtual void OnEasingStarted()
+        {
+            EasingStarted?.Invoke();
+        }
+
+        /// <summary>
+        /// Event invokator.
+        /// </summary>
+        protected virtual void OnEasingFinished()
+        {
+            EasingFinished?.Invoke();
+        }
     }
 }
