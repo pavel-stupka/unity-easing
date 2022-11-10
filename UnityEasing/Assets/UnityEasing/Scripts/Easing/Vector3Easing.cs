@@ -10,18 +10,10 @@ namespace UnityEasing {
 		public Vector3Easing() { }
 		
 		public Vector3Easing(Vector3 from, Vector3 to, float duration = 1.0f, EasingType easingType = EasingType.Linear, float delay = 0.0f) : base(from, to, duration, easingType, delay) { }
-
-		protected override Vector3 ComputeChange(Vector3 from, Vector3 to)
+		
+		protected override Vector3 ComputeValue(Vector3 value, float time, Vector3 from, Vector3 to, float duration, EasingFunction easingFunction)
 		{
-			return to - from;
-		}
-
-		protected override Vector3 ComputeValue(Vector3 value, float time, Vector3 begin, Vector3 change, float duration, EasingFunction easingFunction)
-		{
-			value.x = easingFunction(time, begin.x, change.x, duration);
-			value.y = easingFunction(time, begin.y, change.y, duration);
-			value.z = easingFunction(time, begin.z, change.z, duration);
-			return value;
+			return Vector3.Lerp(from, to, easingFunction(time / duration));
 		}
 	}
 }

@@ -6,14 +6,45 @@ namespace UnityEasing {
     public enum EasingType 
     {
         Linear,
-        InCubic,
-        OutCubic,
-        InOutCubic,
+        
         InQuad,
         OutQuad,
         InOutQuad,
-        OutElastic,
+        
+        InCubic,
+        OutCubic,
+        InOutCubic,
+        
+        InQuart,
+        OutQuart,
+        InOutQuart,
+        
+        InQuint,
+        OutQuint,
+        InOutQuint,
+        
+        InSine,
+        OutSine,
+        InOutSine,
+        
+        InExpo,
+        OutExpo,
+        InOutExpo,
+        
+        InCirc,
+        OutCirc,
+        InOutCirc,
+        
         InElastic,
-        InOutElastic
+        OutElastic,
+        InOutElastic,
+        
+        InBack,
+        OutBack,
+        InOutBack,
+        
+        InBounce,
+        OutBounce,
+        InOutBounce
     }
 }

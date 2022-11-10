@@ -1,20 +1,13 @@
 // ReSharper disable MemberCanBePrivate.Global
 using System;
-using UnityEngine;
 
 namespace UnityEasing {
-    
-    /// <summary>
-    /// General easing funtion delegate.
-    /// <param name="t">Current time.</param>
-    /// <param name="b">Initial (begin) value.</param>
-    /// <param name="c">Change value (target value - initial value).</param>
-    /// <param name="d">Duration (total time).</param>
-    /// </summary>
-    public delegate float EasingFunction(float t, float b, float c, float d);
+	
+    public delegate float EasingFunction(float t);
 
     /// <summary>
-    /// Easing functions implementations.
+    /// Easing functions implementations by Kryzarel.
+    /// https://gist.github.com/Kryzarel/bba64622057f21a1d6d44879f9cd7bd4
     /// </summary>
     public static class EasingFunctions {
 
@@ -28,146 +21,159 @@ namespace UnityEasing {
             return easingType switch
             {
                 EasingType.Linear => Linear,
-                EasingType.InCubic => InCubic,
-                EasingType.OutCubic => OutCubic,
-                EasingType.InOutCubic => InOutCubic,
+                
                 EasingType.InQuad => InQuad,
                 EasingType.OutQuad => OutQuad,
                 EasingType.InOutQuad => InOutQuad,
+
+                EasingType.InCubic => InCubic,
+                EasingType.OutCubic => OutCubic,
+                EasingType.InOutCubic => InOutCubic,
+                
+                EasingType.InQuart => InQuart,
+                EasingType.OutQuart => OutQuart,
+                EasingType.InOutQuart => InOutQuart,
+                
+                EasingType.InQuint => InQuint,
+                EasingType.OutQuint => OutQuint,
+                EasingType.InOutQuint => InOutQuint,
+                
+                EasingType.InSine => InSine,
+                EasingType.OutSine => OutSine,
+                EasingType.InOutSine => InOutSine,
+                
+                EasingType.InExpo => InExpo,
+                EasingType.OutExpo => OutExpo,
+                EasingType.InOutExpo => InOutExpo,
+                
+                EasingType.InCirc => InCirc,
+                EasingType.OutCirc => OutCirc,
+                EasingType.InOutCirc => InOutCirc,
+
                 EasingType.OutElastic => OutElastic,
                 EasingType.InElastic => InElastic,
                 EasingType.InOutElastic => InOutElastic,
+                
+                EasingType.InBack => InBack,
+                EasingType.OutBack => OutBack,
+                EasingType.InOutBack => InOutBack,
+                
+                EasingType.InBounce => InBounce,
+                EasingType.OutBounce => OutBounce,
+                EasingType.InOutBounce => InOutBounce,
+                
                 _ => Linear
             };
         }
 
-        /// <summary>
-        /// Linear easing function.
-        /// </summary>
-        public static float Linear(float t, float b, float c, float d) 
-        {
-            return c * t / d + b;
-        }
+		public static float Linear(float t) => t;
 
-        /// <summary>
-        /// InCubic easing function.
-        /// </summary>
-        public static float InCubic(float t, float b, float c, float d) 
-        {
-            t /= d;
-            return c * t * t * t + b;
-        }
+		public static float InQuad(float t) => t * t;
+		public static float OutQuad(float t) => 1 - InQuad(1 - t);
+		public static float InOutQuad(float t)
+		{
+			if (t < 0.5) return InQuad(t * 2) / 2;
+			return 1 - InQuad((1 - t) * 2) / 2;
+		}
 
-        /// <summary>
-        /// OutCubic easing function.
-        /// </summary>
-        public static float OutCubic(float t, float b, float c, float d) 
-        {
-            t /= d;
-            t--;
-            return c * (t * t * t + 1) + b;
-        }
+		public static float InCubic(float t) => t * t * t;
+		public static float OutCubic(float t) => 1 - InCubic(1 - t);
+		public static float InOutCubic(float t)
+		{
+			if (t < 0.5) return InCubic(t * 2) / 2;
+			return 1 - InCubic((1 - t) * 2) / 2;
+		}
 
-        /// <summary>
-        /// InOutCubic easing function.
-        /// </summary>
-        public static float InOutCubic(float t, float b, float c, float d) 
-        {
-            t /= d / 2;
+		public static float InQuart(float t) => t * t * t * t;
+		public static float OutQuart(float t) => 1 - InQuart(1 - t);
+		public static float InOutQuart(float t)
+		{
+			if (t < 0.5) return InQuart(t * 2) / 2;
+			return 1 - InQuart((1 - t) * 2) / 2;
+		}
 
-            if (t < 1)
-            {
-                return c / 2 * t * t * t + b;
-            }
-            
-            t -= 2;
-            return c / 2 * ( t * t * t + 2) + b;
-        }
+		public static float InQuint(float t) => t * t * t * t * t;
+		public static float OutQuint(float t) => 1 - InQuint(1 - t);
+		public static float InOutQuint(float t)
+		{
+			if (t < 0.5) return InQuint(t * 2) / 2;
+			return 1 - InQuint((1 - t) * 2) / 2;
+		}
 
-        /// <summary>
-        /// InQuad easing function.
-        /// </summary>
-        public static float InQuad(float t, float b, float c, float d) 
-        {
-            t /= d;
-            return c * t * t + b;
-        }
+		public static float InSine(float t) => (float)-Math.Cos(t * Math.PI / 2);
+		public static float OutSine(float t) => (float)Math.Sin(t * Math.PI / 2);
+		public static float InOutSine(float t) => (float)(Math.Cos(t * Math.PI) - 1) / -2;
 
-        /// <summary>
-        /// OutQuad easing function.
-        /// </summary>
-        public static float OutQuad(float t, float b, float c, float d) 
-        {
-            t /= d;
-            return -c * t * (t - 2) + b;
-        }
+		public static float InExpo(float t) => (float)Math.Pow(2, 10 * (t - 1));
+		public static float OutExpo(float t) => 1 - InExpo(1 - t);
+		public static float InOutExpo(float t)
+		{
+			if (t < 0.5) return InExpo(t * 2) / 2;
+			return 1 - InExpo((1 - t) * 2) / 2;
+		}
 
-        /// <summary>
-        /// InOutQuad easing function.
-        /// </summary>
-        public static float InOutQuad(float t, float b, float c, float d) 
-        {
-            t /= d/2;
-            if (t < 1)
-            {
-                return c / 2 * t * t + b;
-            }
-            
-            t--;
-            return -c / 2 * (t * (t - 2) - 1) + b;
-        }
+		public static float InCirc(float t) => -((float)Math.Sqrt(1 - t * t) - 1);
+		public static float OutCirc(float t) => 1 - InCirc(1 - t);
+		public static float InOutCirc(float t)
+		{
+			if (t < 0.5) return InCirc(t * 2) / 2;
+			return 1 - InCirc((1 - t) * 2) / 2;
+		}
 
-        /// <summary>
-        /// OutElastic easing function.
-        /// </summary>
-        public static float OutElastic(float t, float b, float c, float d) 
-        {
-            if (Math.Abs((t /= d) - 1) < Mathf.Epsilon)
-            {
-                return b + c;                
-            }
+		public static float InElastic(float t) => 1 - OutElastic(1 - t);
+		public static float OutElastic(float t)
+		{
+			float p = 0.3f;
+			return (float)Math.Pow(2, -10 * t) * (float)Math.Sin((t - p / 4) * (2 * Math.PI) / p) + 1;
+		}
+		public static float InOutElastic(float t)
+		{
+			if (t < 0.5) return InElastic(t * 2) / 2;
+			return 1 - InElastic((1 - t) * 2) / 2;
+		}
 
-            var p = d * .3f;
-            var s = p / 4;
+		public static float InBack(float t)
+		{
+			float s = 1.70158f;
+			return t * t * ((s + 1) * t - s);
+		}
+		public static float OutBack(float t) => 1 - InBack(1 - t);
+		public static float InOutBack(float t)
+		{
+			if (t < 0.5) return InBack(t * 2) / 2;
+			return 1 - InBack((1 - t) * 2) / 2;
+		}
 
-            return ( c * Mathf.Pow( 2, -10 * t ) * Mathf.Sin( ( t * d - s ) * ( 2 * Mathf.PI ) / p ) + c + b );
-        }
+		public static float InBounce(float t) => 1 - OutBounce(1 - t);
+		public static float OutBounce(float t)
+		{
+			float div = 2.75f;
+			float mult = 7.5625f;
 
-        /// <summary>
-        /// InElastic easing function.
-        /// </summary>
-        public static float InElastic(float t, float b, float c, float d) 
-        {
-            if (Math.Abs((t /= d) - 1) < Mathf.Epsilon)
-            {
-                return b + c;                
-            }
-
-            var p = d * .3f;
-            var s = p / 4;
-
-            return -( c * Mathf.Pow( 2, 10 * ( t -= 1 ) ) * Mathf.Sin( ( t * d - s ) * ( 2 * Mathf.PI ) / p ) ) + b;
-        }
-
-        /// <summary>
-        /// InOutElastic easing function.
-        /// </summary>
-        public static float InOutElastic(float t, float b, float c, float d) 
-        {
-            if (Math.Abs((t /= d / 2) - 2) < Mathf.Epsilon)
-            {
-                return b + c;                
-            }
-
-            var p = d * ( .3f * 1.5f );
-            var s = p / 4;
-
-            if (t < 1)
-            {
-                return -.5f * ( c * Mathf.Pow( 2, 10 * ( t -= 1 ) ) * Mathf.Sin( ( t * d - s ) * ( 2 * Mathf.PI ) / p ) ) + b;                
-            }
-
-            return c * Mathf.Pow( 2, -10 * ( t -= 1 ) ) * Mathf.Sin( ( t * d - s ) * ( 2 * Mathf.PI ) / p ) * .5f + c + b;
-        }
+			if (t < 1 / div)
+			{
+				return mult * t * t;
+			}
+			else if (t < 2 / div)
+			{
+				t -= 1.5f / div;
+				return mult * t * t + 0.75f;
+			}
+			else if (t < 2.5 / div)
+			{
+				t -= 2.25f / div;
+				return mult * t * t + 0.9375f;
+			}
+			else
+			{
+				t -= 2.625f / div;
+				return mult * t * t + 0.984375f;
+			}
+		}
+		public static float InOutBounce(float t)
+		{
+			if (t < 0.5) return InBounce(t * 2) / 2;
+			return 1 - InBounce((1 - t) * 2) / 2;
+		}
     }
 }

@@ -32,13 +32,13 @@ namespace UnityEasing  {
         /// <summary>
         /// Initial value.
         /// </summary>
-        public T Begin { get; private set; }
+        public T From { get; private set; }
         
         /// <summary>
-        /// Change (delta) value.
+        /// Target value.
         /// </summary>
-        public T Change { get; private set; }
-        
+        public T To { get; private set; }
+
         /// <summary>
         /// Total easing duration.
         /// </summary>
@@ -112,8 +112,8 @@ namespace UnityEasing  {
         public void Start(T from, T to, float duration = 1.0f, EasingType easingType = EasingType.Linear, float delay = 0.0f)
         {
             Running = true;
-            Begin = from;
-            Change = ComputeChange(from, to);
+            From = from;
+            To = to;
             Duration = duration;
             Value = from;
             Time = 0f;
@@ -169,7 +169,7 @@ namespace UnityEasing  {
                 Running = false;
             }
 
-            Value = ComputeValue(Value, Time, Begin, Change, Duration, EasingFunction);
+            Value = ComputeValue(Value, Time, From, To, Duration, EasingFunction);
             OnValueChanged(Value);
 
             if (!Running)
@@ -181,24 +181,16 @@ namespace UnityEasing  {
         }
 
         /// <summary>
-        /// Computes a change (delta) value. Usually equeals to: to - from.
-        /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <returns></returns>
-        protected abstract T ComputeChange(T from, T to);
-
-        /// <summary>
         /// Computes the current easing value.
         /// </summary>
         /// <param name="value"></param>
         /// <param name="time"></param>
-        /// <param name="begin"></param>
-        /// <param name="change"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
         /// <param name="duration"></param>
         /// <param name="easingFunction"></param>
         /// <returns></returns>
-        protected abstract T ComputeValue(T value, float time, T begin, T change, float duration, EasingFunction easingFunction);
+        protected abstract T ComputeValue(T value, float time, T from, T to, float duration, EasingFunction easingFunction);
 
         /// <summary>
         /// Event invokator.
