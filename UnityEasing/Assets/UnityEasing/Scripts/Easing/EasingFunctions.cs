@@ -123,7 +123,7 @@ namespace UnityEasing {
 		public static float InElastic(float t) => 1 - OutElastic(1 - t);
 		public static float OutElastic(float t)
 		{
-			float p = 0.3f;
+			const float p = 0.3f;
 			return (float)Math.Pow(2, -10 * t) * (float)Math.Sin((t - p / 4) * (2 * Math.PI) / p) + 1;
 		}
 		public static float InOutElastic(float t)
@@ -134,7 +134,7 @@ namespace UnityEasing {
 
 		public static float InBack(float t)
 		{
-			float s = 1.70158f;
+			const float s = 1.70158f;
 			return t * t * ((s + 1) * t - s);
 		}
 		public static float OutBack(float t) => 1 - InBack(1 - t);
@@ -147,27 +147,27 @@ namespace UnityEasing {
 		public static float InBounce(float t) => 1 - OutBounce(1 - t);
 		public static float OutBounce(float t)
 		{
-			float div = 2.75f;
-			float mult = 7.5625f;
+			const float div = 2.75f;
+			const float mult = 7.5625f;
 
-			if (t < 1 / div)
+			switch (t)
 			{
-				return mult * t * t;
-			}
-			else if (t < 2 / div)
-			{
-				t -= 1.5f / div;
-				return mult * t * t + 0.75f;
-			}
-			else if (t < 2.5 / div)
-			{
-				t -= 2.25f / div;
-				return mult * t * t + 0.9375f;
-			}
-			else
-			{
-				t -= 2.625f / div;
-				return mult * t * t + 0.984375f;
+				case < 1 / div:
+					return mult * t * t;
+				case < 2 / div:
+					t -= 1.5f / div;
+					return mult * t * t + 0.75f;
+				default:
+				{
+					if (t < 2.5 / div)
+					{
+						t -= 2.25f / div;
+						return mult * t * t + 0.9375f;
+					}
+
+					t -= 2.625f / div;
+					return mult * t * t + 0.984375f;
+				}
 			}
 		}
 		public static float InOutBounce(float t)

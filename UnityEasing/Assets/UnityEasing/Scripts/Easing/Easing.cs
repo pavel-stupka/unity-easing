@@ -115,10 +115,11 @@ namespace UnityEasing  {
             From = from;
             To = to;
             Duration = duration;
-            Value = from;
             Time = 0f;
             EasingFunction = EasingFunctions.Get(easingType);
             Delay = delay;
+            
+            Value = ComputeValue(From, To, Time, Duration, EasingFunction);
             
             OnEasingStarted();
             OnValueChanged(Value);
@@ -126,20 +127,18 @@ namespace UnityEasing  {
         
         /// <summary>
         /// Updates easing value based on the current UnityEngine.Time.deltaTime.
-        /// Returns true if the value was updated, false otherwise. 
         /// </summary>
-        /// <returns>Returns true if the value was updated, false otherwise.</returns>
+        /// <returns>Returns the current updated value.</returns>
         public T Update() 
         {
             return Update(UnityEngine.Time.deltaTime);
         }
         
         /// <summary>
-        /// Updates easing values.
+        /// Updates easing values according to the given delta time.
         /// </summary>
         /// <param name="deltaTime"></param>
-        /// <returns>Returns true if the easing is running/valid, ie. the value was updated or waiting because
-        /// a of delay. Returns false if the easing is finished.</returns>
+        /// <returns>Returns the current updated value.</returns>
         public T Update(float deltaTime) 
         {
             if (!Running) return Value;
@@ -169,7 +168,7 @@ namespace UnityEasing  {
                 Running = false;
             }
 
-            Value = ComputeValue(Value, Time, From, To, Duration, EasingFunction);
+            Value = ComputeValue(From, To, Time, Duration, EasingFunction);
             OnValueChanged(Value);
 
             if (!Running)
@@ -183,14 +182,13 @@ namespace UnityEasing  {
         /// <summary>
         /// Computes the current easing value.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="time"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
+        /// <param name="time"></param>
         /// <param name="duration"></param>
         /// <param name="easingFunction"></param>
         /// <returns></returns>
-        protected abstract T ComputeValue(T value, float time, T from, T to, float duration, EasingFunction easingFunction);
+        protected abstract T ComputeValue(T from, T to, float time, float duration, EasingFunction easingFunction);
 
         /// <summary>
         /// Event invokator.

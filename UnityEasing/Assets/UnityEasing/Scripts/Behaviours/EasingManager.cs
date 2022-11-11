@@ -5,7 +5,7 @@ namespace UnityEasing
 {
     public class EasingManager : MonoBehaviour
     {
-        private readonly HashSet<Easing<dynamic>> easings = new HashSet<Easing<dynamic>>();
+        private readonly HashSet<Easing<dynamic>> easings = new();
 
         private static EasingManager instance;
 

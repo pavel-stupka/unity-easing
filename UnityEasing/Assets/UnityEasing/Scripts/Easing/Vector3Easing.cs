@@ -11,7 +11,7 @@ namespace UnityEasing {
 		
 		public Vector3Easing(Vector3 from, Vector3 to, float duration = 1.0f, EasingType easingType = EasingType.Linear, float delay = 0.0f) : base(from, to, duration, easingType, delay) { }
 		
-		protected override Vector3 ComputeValue(Vector3 value, float time, Vector3 from, Vector3 to, float duration, EasingFunction easingFunction)
+		protected override Vector3 ComputeValue(Vector3 from, Vector3 to, float time, float duration, EasingFunction easingFunction)
 		{
 			return Vector3.Lerp(from, to, easingFunction(time / duration));
 		}
