@@ -333,6 +333,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetTranform: {fileID: 0}
   targetPosition: {x: 4, y: 0.5, z: 0}
+  duration: 2
+  delay: 1
 --- !u!1 &400076906
 GameObject:
   m_ObjectHideFlags: 0
@@ -367,6 +369,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetTranform: {fileID: 227990881}
   targetPosition: {x: 4, y: 0.5, z: 0}
+  duration: 2
+  delay: 1.2
 --- !u!65 &400076908
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -657,6 +661,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetTranform: {fileID: 400076911}
   targetPosition: {x: 4, y: 0.5, z: 0}
+  duration: 2
+  delay: 1.4
 --- !u!65 &1043874144
 BoxCollider:
   m_ObjectHideFlags: 0

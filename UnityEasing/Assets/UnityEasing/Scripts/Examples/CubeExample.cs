@@ -7,15 +7,18 @@ namespace UnityEasing
         [SerializeField] private Transform targetTranform;
         [SerializeField] private Vector3 targetPosition;
         
+        [SerializeField] private float duration = 2f;
+        [SerializeField] private float delay = 1f;
+
         private void Start()
         {
             if (targetTranform != null)
             {
-                transform.MoveTo(targetTranform, 2.0f, EasingType.OutCubic, 1.0f, Space.World);
+                transform.MoveTo(targetTranform, duration, EasingType.OutCubic, delay, Space.World);
             }
             else
             {
-                transform.MoveTo(targetPosition, 2.0f, EasingType.OutCubic, 1.0f, Space.World);
+                transform.MoveTo(targetPosition, duration, EasingType.OutCubic, delay, Space.World);
             }
         }
     }
