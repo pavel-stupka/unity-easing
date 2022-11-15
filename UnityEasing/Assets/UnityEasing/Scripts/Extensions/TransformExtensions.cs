@@ -37,6 +37,16 @@ namespace UnityEasing
             var moveToBehaviour = GetMoveToBehaviour(transform);
             moveToBehaviour.MoveTo(target, duration, easingType, delay, space);
         }
+        
+        /// <summary>
+        /// Stops transform movement.
+        /// </summary>
+        /// <param name="transform"></param>
+        public static void StopMovement(this Transform transform)
+        {
+            var moveToBehaviour = GetMoveToBehaviour(transform);
+            moveToBehaviour.StopMovement();
+        }
 
         /// <summary>
         /// Gets (and creates is necessary) the MoveToBehaviour component on target transform.

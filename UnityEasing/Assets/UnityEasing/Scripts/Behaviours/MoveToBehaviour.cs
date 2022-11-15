@@ -67,6 +67,14 @@ namespace UnityEasing
         }
 
         /// <summary>
+        /// Stops movement.
+        /// </summary>
+        public void StopMovement()
+        {
+            progressEasing.Stop();
+        }
+
+        /// <summary>
         /// Frame update.
         /// </summary>
         private void Update()

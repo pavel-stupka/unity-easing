@@ -19,6 +19,11 @@ namespace UnityEasing  {
     public delegate void EasingFinishedDelegate();
     
     /// <summary>
+    /// Easing stopped event delegate.
+    /// </summary>
+    public delegate void EasingStoppedDelegate();
+    
+    /// <summary>
     /// General easing implementation.
     /// </summary>
     /// <typeparam name="T"></typeparam>
@@ -50,11 +55,6 @@ namespace UnityEasing  {
         public T Value { get; private set; }
 
         /// <summary>
-        /// Current easing time.
-        /// </summary>
-        public float Time { get; private set; }
-        
-        /// <summary>
         /// Seconds remaining before easing starts (countdown).
         /// </summary>
         public float Delay { get; private set; }
@@ -78,6 +78,16 @@ namespace UnityEasing  {
         /// Event that is invoked once easing finishes.
         /// </summary>
         public event EasingFinishedDelegate EasingFinished;
+        
+        /// <summary>
+        /// Event that is invoked once easing is stopped by Stop() method.
+        /// </summary>
+        public event EasingStartedDelegate EasingStopped;
+        
+        /// <summary>
+        /// Current easing time (in seconds) including time during delay. Max possible time equals to <see cref="Delay"/> + <see cref="Duration"/>.
+        /// </summary>
+        public float time;
 
         /// <summary>
         /// Create a new instance but does not start easing.
@@ -115,14 +125,54 @@ namespace UnityEasing  {
             From = from;
             To = to;
             Duration = duration;
-            Time = 0f;
+            time = 0f;
             EasingFunction = EasingFunctions.Get(easingType);
             Delay = delay;
             
-            Value = ComputeValue(From, To, Time, Duration, EasingFunction);
+            Value = ComputeValue(From, To, 0, Duration, EasingFunction);
             
             OnEasingStarted();
             OnValueChanged(Value);
+        }
+
+        /// <summary>
+        /// Stops the easing.
+        /// </summary>
+        public void Stop()
+        {
+            if (Running)
+            {
+                Running = false;
+                OnEasingStopped();
+            }
+        }
+
+        /// <summary>
+        /// Current easing time (in seconds) including time during delay. Max possible time equals to <see cref="Delay"/> + <see cref="Duration"/>.
+        /// </summary>
+        public float Time
+        {
+            get => time;
+            set
+            {
+                if (!Running) return;
+
+                var normalizedValue = value;
+                if (value < 0) normalizedValue = 0;
+                if (value >= Delay + Duration) normalizedValue = Delay + Duration;
+                time = normalizedValue;
+                
+                if (time < Delay)
+                {
+                    Value = ComputeValue(From, To, 0, Duration, EasingFunction);                
+                }
+                else
+                {
+                    Value = ComputeValue(From, To, time - Delay, Duration, EasingFunction);
+                }
+                
+                OnValueChanged(Value);
+            }
         }
         
         /// <summary>
@@ -143,36 +193,11 @@ namespace UnityEasing  {
         {
             if (!Running) return Value;
 
-            var updateTimeByDelta = true;
-            
-            if (Delay > 0.0f)
-            {
-                Delay -= deltaTime;
-                if (Delay >= 0.0f)
-                {
-                    return Value;
-                }
-                updateTimeByDelta = false;
-                Time = -Delay;
-                Delay = 0.0f;
-            }
+            Time += deltaTime;
 
-            if (updateTimeByDelta)
+            if (Time >= Delay + Duration)
             {
-                Time += deltaTime;                
-            }
-
-            if (Time >= Duration)
-            {
-                Time = Duration;
                 Running = false;
-            }
-
-            Value = ComputeValue(From, To, Time, Duration, EasingFunction);
-            OnValueChanged(Value);
-
-            if (!Running)
-            {
                 OnEasingFinished();
             }
 
@@ -213,6 +238,14 @@ namespace UnityEasing  {
         protected virtual void OnEasingFinished()
         {
             EasingFinished?.Invoke();
+        }
+        
+        /// <summary>
+        /// Event invokator.
+        /// </summary>
+        protected virtual void OnEasingStopped()
+        {
+            EasingStopped?.Invoke();
         }
     }
 }
